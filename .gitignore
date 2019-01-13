@@ -63,3 +63,10 @@ target/
 
 # nose
 .noseids
+
+# vim temporary files
+*~
+*.sav
+
+# virtual environments
+venv*

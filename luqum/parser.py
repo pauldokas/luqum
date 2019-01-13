@@ -2,8 +2,8 @@
 """The Lucene Query DSL parser based on PLY
 """
 
-# TODO : add reserved chars and escaping, regex
-# see : https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+# TODO : add reserved chars and escaping, regex.  see:
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
 # https://lucene.apache.org/core/3_6_0/queryparsersyntax.html
 import re
 
@@ -40,7 +40,8 @@ tokens = (
      'RPAREN',
      'LBRACKET',
      'RBRACKET'] +
-    # we sort to have a deterministic order, so that gammar signature does not changes
+    # we sort to have a deterministic order,
+    # so that gammar signature does not changes
     sorted(list(reserved.values())))
 
 
@@ -73,8 +74,8 @@ precedence = (
 
 # term
 
-# the case of : which is used in date is problematic because it is also a delimiter
-# lets catch those expressions appart
+# the case of : which is used in date is problematic because it is also a
+# delimiter.  lets pull these expressions apart
 # Note : we must use positive look behind, because regexp engine is eager,
 # and it's only arrived at ':' that it will try this rule
 TIME_RE = r'''
@@ -85,7 +86,8 @@ TIME_RE = r'''
 # this is a wide catching expression, to also include date math.
 # Inspired by the original lucene parser:
 # https://github.com/apache/lucene-solr/blob/master/lucene/queryparser/src/java/org/apache/lucene/queryparser/surround/parser/QueryParser.jj#L189
-# We do allow the wildcards operators ('*' and '?') as our parser doesn't deal with them.
+# We do allow the wildcards operators ('*' and '?') as our parser doesn't deal
+# with them.
 
 TERM_RE = r'''
 (?P<term>  # group term
@@ -124,6 +126,7 @@ BOOST_RE = r'\^(?P<force>[0-9.]+)?'
 def t_SEPARATOR(t):
     r'\s+'
     pass  # discard separators
+
 
 @lex.TOKEN(TERM_RE)
 def t_TERM(t):
@@ -205,7 +208,8 @@ def p_expression_unary(p):
 
 def p_grouping(p):
     'unary_expression : LPAREN expression RPAREN'
-    p[0] = Group(p[2])  # Will p_field_search will transform as FieldGroup if necessary
+    # p_field_search will transform to FieldGroup if necessary
+    p[0] = Group(p[2])
 
 
 def p_range(p):
@@ -219,7 +223,7 @@ def p_field_search(p):
     '''unary_expression : TERM COLUMN unary_expression'''
     if isinstance(p[3], Group):
         p[3] = group_to_fieldgroup(p[3])
-    # for field name we take p[1].value for it was captured as a word expression
+    # for field name we take p[1].value as it was captured as a Word expression
     p[0] = SearchField(p[1].value, p[3])
 
 

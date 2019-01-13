@@ -176,8 +176,8 @@ def t_TERM(t):
         t.value = Word(value)
 
         t.term_type = None
-        for (term_type, pattern) in term_type_patterns:
-            if pattern.fullmatch(t.value):
+        for (term_type, pattern) in term_type_patterns.items():
+            if pattern.fullmatch(value):
                 t.term_type = term_type
                 break
 
